@@ -128,7 +128,12 @@ const CryptoService = {
     const parts = trimmed.split(':');
 
     // フォーマット検証: AESGCM:v1:<iv>:<ciphertext>
-    if (parts.length !== 4 || parts[0] !== 'AESGCM' || parts[1] !== 'v1') {
+    // モバイル端末等での自動変換（小文字化）に配慮し、プレフィックスの大文字小文字を許容
+    if (
+      parts.length !== 4 ||
+      parts[0].toUpperCase() !== 'AESGCM' ||
+      parts[1].toLowerCase() !== 'v1'
+    ) {
       throw new Error('Invalid encrypted format.');
     }
 
@@ -245,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
     element.setAttribute('hidden', 'true');
   }
 
-  // --- コピー機能ヘルパー ---
+  // --- コピー機能ヘルパー（モバイル対応強化） ---
   async function handleCopy(button, targetElement) {
     const text = targetElement.value;
     if (!text) return;
@@ -254,7 +259,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (navigator.clipboard && navigator.clipboard.writeText) {
         await navigator.clipboard.writeText(text);
       } else {
-        targetElement.select();
+        // モバイル環境用フォールバック
+        targetElement.focus();
+        targetElement.setSelectionRange(0, 99999);
         document.execCommand('copy');
       }
 

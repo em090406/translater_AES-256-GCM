@@ -57,14 +57,14 @@
           <div class="field-group">
             <label for="encrypt-key">Master Key</label>
             <div class="password-wrapper">
-              <input type="password" id="encrypt-key" class="input-text" placeholder="Enter master key" autocomplete="new-password" spellcheck="false">
+              <input type="password" id="encrypt-key" class="input-text" placeholder="Enter master key" autocomplete="new-password" spellcheck="false" autocapitalize="off" autocorrect="off">
               <button type="button" class="btn-toggle-visibility" data-target="encrypt-key" aria-label="パスワードの表示切り替え">Show</button>
             </div>
           </div>
 
           <div class="field-group">
             <label for="encrypt-plain">Plain Text</label>
-            <textarea id="encrypt-plain" class="textarea" rows="4" placeholder="Enter text to encrypt..." spellcheck="false"></textarea>
+            <textarea id="encrypt-plain" class="textarea" rows="4" placeholder="Enter text to encrypt..." spellcheck="false" autocapitalize="off" autocorrect="off"></textarea>
           </div>
 
           <div class="action-row">
@@ -78,7 +78,7 @@
               <label for="encrypt-output">Encrypted Data</label>
               <button type="button" id="btn-copy-encrypted" class="btn-copy" data-target="encrypt-output" disabled>Copy</button>
             </div>
-            <textarea id="encrypt-output" class="textarea code-output" rows="3" readonly placeholder="Output will appear here..." spellcheck="false"></textarea>
+            <textarea id="encrypt-output" class="textarea code-output" rows="3" readonly placeholder="Output will appear here..." spellcheck="false" autocapitalize="off" autocorrect="off"></textarea>
           </div>
         </form>
       </section>
@@ -89,14 +89,14 @@
           <div class="field-group">
             <label for="decrypt-key">Master Key</label>
             <div class="password-wrapper">
-              <input type="password" id="decrypt-key" class="input-text" placeholder="Enter master key" autocomplete="new-password" spellcheck="false">
+              <input type="password" id="decrypt-key" class="input-text" placeholder="Enter master key" autocomplete="new-password" spellcheck="false" autocapitalize="off" autocorrect="off">
               <button type="button" class="btn-toggle-visibility" data-target="decrypt-key" aria-label="パスワードの表示切り替え">Show</button>
             </div>
           </div>
 
           <div class="field-group">
             <label for="decrypt-input">Encrypted Data</label>
-            <textarea id="decrypt-input" class="textarea code-output" rows="3" placeholder="Paste AESGCM:v1:... format string" spellcheck="false"></textarea>
+            <textarea id="decrypt-input" class="textarea code-output" rows="3" placeholder="Paste AESGCM:v1:... format string" spellcheck="false" autocapitalize="off" autocorrect="off"></textarea>
           </div>
 
           <div class="action-row">
@@ -110,7 +110,7 @@
               <label for="decrypt-output">Plain Text</label>
               <button type="button" id="btn-copy-decrypted" class="btn-copy" data-target="decrypt-output" disabled>Copy</button>
             </div>
-            <textarea id="decrypt-output" class="textarea" rows="4" readonly placeholder="Decrypted text will appear here..." spellcheck="false"></textarea>
+            <textarea id="decrypt-output" class="textarea" rows="4" readonly placeholder="Decrypted text will appear here..." spellcheck="false" autocapitalize="off" autocorrect="off"></textarea>
           </div>
         </form>
       </section>
