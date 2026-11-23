@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AES-256-GCM Crypto Tool</title>
+  <meta name="description" content="ブラウザの Web Crypto API を利用した完全クライアントサイド AES-256-GCM 暗号化・復号ツール">
+  <!-- 外部通信・外部リソース読み込みを厳格に制限するCSP -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self' 'unsafe-inline'; script-src 'self';">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <div class="header-content">
+        <div class="brand">
+          <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          <h1>CryptoTool</h1>
+        </div>
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="テーマ切り替え" title="ライト/ダークモード切り替え">
+          <svg id="sun-icon" class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg id="moon-icon" class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </div>
+      <p class="subtitle">Client-Side AES-256-GCM Encryption</p>
+    </header>
+
+    <main class="card">
+      <!-- ナビゲーションタブ -->
+      <nav class="tabs" role="tablist">
+        <button id="tab-encrypt" class="tab-button active" role="tab" aria-selected="true" aria-controls="panel-encrypt">
+          Encrypt
+        </button>
+        <button id="tab-decrypt" class="tab-button" role="tab" aria-selected="false" aria-controls="panel-decrypt">
+          Decrypt
+        </button>
+      </nav>
+
+      <!-- 暗号化パネル -->
+      <section id="panel-encrypt" class="tab-panel active" role="tabpanel" aria-labelledby="tab-encrypt">
+        <form id="encrypt-form" autocomplete="off" onsubmit="return false;">
+          <div class="field-group">
+            <label for="encrypt-key">Master Key</label>
+            <div class="password-wrapper">
+              <input type="password" id="encrypt-key" class="input-text" placeholder="Enter master key" autocomplete="new-password" spellcheck="false">
+              <button type="button" class="btn-toggle-visibility" data-target="encrypt-key" aria-label="パスワードの表示切り替え">Show</button>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="encrypt-plain">Plain Text</label>
+            <textarea id="encrypt-plain" class="textarea" rows="4" placeholder="Enter text to encrypt..." spellcheck="false"></textarea>
+          </div>
+
+          <div class="action-row">
+            <button type="button" id="btn-encrypt" class="btn btn-primary">Encrypt</button>
+          </div>
+
+          <div id="encrypt-error" class="status-message error" role="alert" hidden></div>
+
+          <div class="field-group output-group">
+            <div class="label-with-action">
+              <label for="encrypt-output">Encrypted Data</label>
+              <button type="button" id="btn-copy-encrypted" class="btn-copy" data-target="encrypt-output" disabled>Copy</button>
+            </div>
+            <textarea id="encrypt-output" class="textarea code-output" rows="3" readonly placeholder="Output will appear here..." spellcheck="false"></textarea>
+          </div>
+        </form>
+      </section>
+
+      <!-- 復号パネル -->
+      <section id="panel-decrypt" class="tab-panel" role="tabpanel" aria-labelledby="tab-decrypt" hidden>
+        <form id="decrypt-form" autocomplete="off" onsubmit="return false;">
+          <div class="field-group">
+            <label for="decrypt-key">Master Key</label>
+            <div class="password-wrapper">
+              <input type="password" id="decrypt-key" class="input-text" placeholder="Enter master key" autocomplete="new-password" spellcheck="false">
+              <button type="button" class="btn-toggle-visibility" data-target="decrypt-key" aria-label="パスワードの表示切り替え">Show</button>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="decrypt-input">Encrypted Data</label>
+            <textarea id="decrypt-input" class="textarea code-output" rows="3" placeholder="Paste AESGCM:v1:... format string" spellcheck="false"></textarea>
+          </div>
+
+          <div class="action-row">
+            <button type="button" id="btn-decrypt" class="btn btn-primary">Decrypt</button>
+          </div>
+
+          <div id="decrypt-error" class="status-message error" role="alert" hidden></div>
+
+          <div class="field-group output-group">
+            <div class="label-with-action">
+              <label for="decrypt-output">Plain Text</label>
+              <button type="button" id="btn-copy-decrypted" class="btn-copy" data-target="decrypt-output" disabled>Copy</button>
+            </div>
+            <textarea id="decrypt-output" class="textarea" rows="4" readonly placeholder="Decrypted text will appear here..." spellcheck="false"></textarea>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <div class="security-badge">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+        </svg>
+        <span>No storage &bull; No telemetry &bull; Pure Web Crypto</span>
+      </div>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
